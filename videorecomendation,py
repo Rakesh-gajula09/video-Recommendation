@@ -1,0 +1,17 @@
+import numpy as np
+
+def recommend_videos(user_id, user_video_matrix, latent_features, top_n=3):
+    user_index = user_video_matrix.index.get_loc(user_id)
+    user_vector = latent_features.iloc[user_index].values
+    similarity_scores = user_video_matrix.dot(user_vector)
+    similarity_scores = similarity_scores / np.linalg.norm(user_vector)
+
+    # Get top-n recommendations
+    recommendations = similarity_scores.nlargest(top_n + 1).iloc[1:]
+    recommended_videos = recommendations.index.tolist()
+    
+    return recommended_videos
+
+# Get recommendations for user 1
+recommended_videos = recommend_videos(1, user_video_matrix, latent_features)
+print(f"Recommended videos for user 1: {recommended_videos}")
